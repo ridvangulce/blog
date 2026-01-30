@@ -1,0 +1,29 @@
+{
+    "kind": "collectionType",
+    "collectionName": "social_links",
+    "info": {
+        "singularName": "social-link",
+        "pluralName": "social-links",
+        "displayName": "Social Link",
+        "description": "Social media links for the profile"
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "platform": {
+            "type": "string",
+            "required": true
+        },
+        "url": {
+            "type": "string",
+            "required": true
+        },
+        "iconClass": {
+            "type": "string",
+            "required": true,
+            "default": "ri-link"
+        }
+    }
+}

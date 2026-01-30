@@ -38,13 +38,23 @@ export default {
           },
         };
 
+        // Social Link api izinlerini ekle
+        permissions['api::social-link'] = {
+          controllers: {
+            'social-link': {
+              find: { enabled: true },
+              findOne: { enabled: true },
+            },
+          },
+        };
+
         // Rolü güncelle
         await strapi
           .plugin('users-permissions')
           .service('role')
           .updateRole(publicRole.id, { permissions });
 
-        strapi.log.info('Public role permissions updated for Post API');
+        strapi.log.info('Public role permissions updated for Post and Social Link APIs');
       }
     } catch (error) {
       strapi.log.error('Bootstrap error updating permissions:', error);
