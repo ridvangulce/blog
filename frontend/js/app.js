@@ -22,7 +22,38 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
+
+    // Sosyal medya linklerini yükle
+    loadSocialLinks();
 });
+
+// Sosyal Medya Linklerini Çekme
+async function loadSocialLinks() {
+    const container = document.getElementById('social-links');
+    if (!container) return;
+
+    try {
+        const response = await fetch(`${API_URL}/social-links`);
+        if (!response.ok) return; // Hata varsa sessizce geç (bloklamasın)
+
+        const data = await response.json();
+        const links = data.data;
+
+        if (!links || links.length === 0) return;
+
+        container.innerHTML = links.map(link => {
+            const attr = link.attributes || link;
+            return `
+                <a href="${attr.url}" target="_blank" rel="noopener noreferrer" class="social-link" title="${attr.platform}">
+                    <i class="${attr.iconClass}"></i>
+                </a>
+            `;
+        }).join('');
+
+    } catch (error) {
+        console.error('Sosyal linkler yüklenemedi:', error);
+    }
+}
 
 // Resim URL'sini düzelten yardımcı fonksiyon
 function getImageUrl(imageData) {
@@ -137,7 +168,11 @@ async function loadPostHandler(slug) {
 
         const post = posts[0];
         const attr = post.attributes || post;
-        const imageUrl = getImageUrl(attr.cover);
+
+        // Detay görseli varsa onu kullan, yoksa kapak görselini kullan (listede kullanılan)
+        const imageUrl = getImageUrl(attr.detailImage) !== 'https://placehold.co/800x400'
+            ? getImageUrl(attr.detailImage)
+            : getImageUrl(attr.cover);
 
         // Markdown'ı HTML'e çevir (marked kütüphanesi ile)
         const rawHtml = marked.parse(attr.content);
